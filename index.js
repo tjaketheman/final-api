@@ -6,10 +6,17 @@ const cors = require('cors')
 const MongoClient = require('mongodb').MongoClient;
 const ConnectionURL = "mongodb+srv://tjaketheman:owner1@mycluster-zfcy6.mongodb.net/test?retryWrites=true";
 const dbName = "Pantrack";
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-app.get('/', function (req, res) {
-    return res.send('Hello World');
+const pantrySchema = new Schema({
+    name: {type: String, required: true, max: 20},
+    amount: {type: Number, required: true},
+    unit: {type: String, required: true}
+
 });
+
+module.exports = mongoose.model('Pantry', pantrySchema);
 
 app.listen(port, () => {
     MongoClient.connect(ConnectionURL, { useNewUrlParser: true }, (error, client) => {
@@ -26,13 +33,24 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true }));
 
-app.get('/', (req, res) => {
-    collection.find({}).toArray((error, result) => {
-        if (error) {
-            return response.status(500).send(error);
+app.get('/pantry', (req, res) => {
+    collection.find({}).toArray((err, result) => {
+        if (err) {
+            return res.status(500).send(error);
         }
-        response.send(result);
+        res.send(result);
     })
+})
+
+app.get('/pantry/:id', (req, res) => {
+    collection.findOne(req.params._id, (err, result) => {
+        if (err) {
+            return res.status(500).send(err);
+            }
+        res.send(result);
+    })
+
+
 })
 
 app.post('/pantry/add', cors(), (req, res) => {
@@ -43,6 +61,22 @@ app.post('/pantry/add', cors(), (req, res) => {
         }
         return res.status(200).send(body)
     })
+})
+
+app.put('/pantry/:id', (req, res) => {
+    collection.findOne(req.params._id, (err, res) => {
+        const item = {
+            _id: req.params._id,
+            name: req.params.name,
+            amount: req.params.amount,
+            unit: req.params.unit,
+
+        }
+    })
+});
+
+app.delete('/pantry', (req, res) => {
+
 })
 
 app.use(function (req, res, next) {
