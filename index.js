@@ -33,10 +33,21 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true }));
 
+app.param('id', (req, res, next, id) =>{
+    const item = _.find(items, {_id: _id});
+
+    if (item) {
+        req.item = item;
+        next();
+    } else {
+        res.send(err);
+    }
+})
+
 app.get('/pantry', (req, res) => {
     collection.find({}).toArray((err, result) => {
         if (err) {
-            return res.status(500).send(error);
+            return res.status(500).send(err);
         }
         res.send(result);
     })
@@ -55,28 +66,23 @@ app.get('/pantry/:id', (req, res) => {
 
 app.post('/pantry/add', cors(), (req, res) => {
     const body = req.body
-    collection.insertOne(body, (error, result) => {
-        if(error) {
-            return res.status(500).send(error);
+    collection.insertOne(body, (err, result) => {
+        if(err) {
+            return res.status(500).send(err);
         }
         return res.status(200).send(body)
     })
 })
 
 app.put('/pantry/:id', (req, res) => {
-    collection.findOne(req.params._id, (err, res) => {
-        const item = {
-            _id: req.params._id,
-            name: req.params.name,
-            amount: req.params.amount,
-            unit: req.params.unit,
-
+    collection.findOne(req.params._id, (err, result) => {
+        if(err) {
+            return res.status(500).send(err)
         }
-    })
-});
+    }))
 
-app.delete('/pantry', (req, res) => {
-
+app.delete('/pantry/:id', (req, res) => {
+    collection.findOne(req.params._id, )
 })
 
 app.use(function (req, res, next) {
