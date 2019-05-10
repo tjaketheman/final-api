@@ -74,32 +74,22 @@ app.post('/pantry/add', cors(), (req, res) => {
 })
 
 app.put('/pantry/:id', (req, res) => {
-    const item = req.params;
-    collection.findOne(req.params._id, (err, result) => {
-        if (err) {
-            return res.status(500).send(err);
-        }
-     name = req.body.name;
-    amount = req.body.amount;
-    unit = req.body.unit;
-        
-    return res.status(200).send(result);
-    })
     
 
 
-    // const data = {
-    //     name: req.body.name,
-    //     amount: req.body.amount,
-    //     unit: req.body.unit,
-    // };
-    // console.log(data)
-    // pantryModel.updateOne({"_id": req.body._id}, {$set: data}, (err, result) => {
-    //     if (err) {
-    //         return res.status(500).send(err);
-    //         }
-    //     res.send(result);
-    // })
+//     const data = {
+//         name: req.body.name,
+//         amount: req.body.amount,
+//         unit: req.body.unit,
+//     };
+//     console.log(data)
+//     collection.findOneAndUpdate({"_id": req.body.id}, {$set: data}, (err, result) => {
+//         if (err) {
+//             return res.status(500).send(err);
+//             }
+//         res.send(result);
+//     })
+
 })
 
 app.delete('/pantry/:id', (req, res) => {
